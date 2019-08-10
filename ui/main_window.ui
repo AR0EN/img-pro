@@ -37,7 +37,7 @@ color: rgb(160, 160, 160);</string>
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="lineEditFocalLength">
     <property name="geometry">
      <rect>
       <x>78</x>
@@ -63,7 +63,7 @@ color: rgb(180, 180, 180);</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
+   <widget class="QLineEdit" name="lineEditAperture">
     <property name="geometry">
      <rect>
       <x>218</x>
@@ -105,7 +105,7 @@ color: rgb(180, 180, 180);</string>
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="labelAperture_2">
+   <widget class="QLabel" name="labelExposureTime">
     <property name="geometry">
      <rect>
       <x>283</x>
@@ -121,7 +121,7 @@ color: rgb(180, 180, 180);</string>
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_3">
+   <widget class="QLineEdit" name="lineEditExposureTime">
     <property name="geometry">
      <rect>
       <x>358</x>
@@ -144,7 +144,7 @@ color: rgb(180, 180, 180);</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="labelAperture_3">
+   <widget class="QLabel" name="labelISO">
     <property name="geometry">
      <rect>
       <x>423</x>
@@ -160,7 +160,7 @@ color: rgb(180, 180, 180);</string>
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_4">
+   <widget class="QLineEdit" name="lineEditISO">
     <property name="geometry">
      <rect>
       <x>498</x>
@@ -184,6 +184,58 @@ color: rgb(180, 180, 180);</string>
     </property>
     <property name="clearButtonEnabled">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>78</x>
+      <y>621</y>
+      <width>60</width>
+      <height>3</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_2">
+    <property name="geometry">
+     <rect>
+      <x>218</x>
+      <y>621</y>
+      <width>60</width>
+      <height>3</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_3">
+    <property name="geometry">
+     <rect>
+      <x>358</x>
+      <y>621</y>
+      <width>60</width>
+      <height>3</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_4">
+    <property name="geometry">
+     <rect>
+      <x>498</x>
+      <y>621</y>
+      <width>60</width>
+      <height>3</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
     </property>
    </widget>
    <widget class="QSplitter" name="splitter">
