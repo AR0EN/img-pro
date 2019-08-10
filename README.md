@@ -10,6 +10,8 @@ img-pro
 4. Do not end the subject line with a period
 5. Start the subject line with a Imperative Verb
 6. Use the body to explain what and why vs. how
+7. Use standardized bullets (multi-levels): - -> + -> *
+8. Use standardized indent size: 2 spaces
 
 Ref:
 [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
