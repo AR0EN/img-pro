@@ -1,8 +1,18 @@
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QDesktopWidget, QWidget, QFileDialog, QLabel
-from PyQt5.QtGui import QIcon, QPixmap
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Aug 13 20:55:37 2019
 
-from main_window import *
+@author: Le Huy Hoang
+"""
+
+import cv2
+
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QPixmap, QImage
+
+from images import Image
+from main_window import Ui_MainWindow
 
 import sys
 
@@ -27,17 +37,38 @@ class Ui():
 
     # Open an image
     def actionOpenClickEvt(self):
-        fileBrowser = QFileDialog()
-        fileBrowser.setFileMode(QFileDialog.ExistingFile)
-        fileBrowser.setNameFilter('Images ' + Ui.SUPPORT_FORMAT)
-        if fileBrowser.exec_():
+        img = Image.browse()
+        if img.valid:
             displayWidth = self.gui.labelCanvas.width()
             displayHeight = self.gui.labelCanvas.height()
-            fileNames = fileBrowser.selectedFiles()
-            pixmap = QPixmap(fileNames[0])
-            if (displayWidth < pixmap.width()) or (displayHeight < pixmap.height()):
-                pixmap = pixmap.scaled(displayWidth, displayHeight, QtCore.Qt.KeepAspectRatio)
             
+            
+            height, width, channel = img.mat.shape
+            
+            hFactor = float(displayHeight)/height
+            wFactor = float(displayWidth)/width
+            
+            if (wFactor > hFactor) and (displayHeight < height):
+                height = displayHeight
+                width = int(width * hFactor)
+                resizedImg = cv2.resize(img.mat,(width,height))
+                
+            elif (wFactor < hFactor) and (displayWidth < width):
+                height = int(height * wFactor)
+                width = displayWidth
+                resizedImg = cv2.resize(img.mat,(width,height))
+                
+            elif (displayHeight < height):
+                height = displayHeight
+                width = displayWidth
+                resizedImg = cv2.resize(img.mat,(displayWidth, displayHeight))
+            else:
+                resizedImg = img.mat
+            
+            bytesPerLine = 3 * width
+            qImg = QImage(resizedImg, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+            
+            pixmap = QPixmap(qImg)
             self.gui.labelCanvas.setPixmap(pixmap)
 
     # Export changes to a new image
@@ -51,9 +82,6 @@ class Ui():
     # Exit
     def actionExitClickEvt(self):
         self.mainWindow.close()
-
-
-
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
