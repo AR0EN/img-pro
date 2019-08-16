@@ -7,11 +7,10 @@ Created on Tue Aug 13 20:55:37 2019
 
 import os
 
-import numpy as np
 import cv2
 
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QFileDialog, QListWidget, QListWidgetItem
 
 class Image:
     # Supported Image Formats (refer to OpenCV imread() for more details)
@@ -34,16 +33,56 @@ class Image:
     def getData(self):
         return self.mat.data
 
-    # Browse an image
-    @staticmethod
-    def browse():
+class Images():
+    # Maximum Size of the queue
+    MAX_SIZE = 7
+    
+    def __init__(self, _listWidget):
+        self.listWidget = _listWidget
+        self.images = []
+        
+        
+    def addImage(self, _path):
+        if (Images.MAX_SIZE > len(self.images)):
+            # Read the image
+            img = Image(_path)
+            
+            if (img.valid):
+                # Add image to the queue
+                self.images.append(img)
+                
+                # Update list widget
+                item = QListWidgetItem(img.name)
+                item.setCheckState(Qt.Checked)
+                item.setCheckState(Qt.Checked)
+                self.listWidget.addItem(item)
+                
+            else:
+                pass
+            
+        else:
+            pass
+    
+    def removeItem(self, _index):
+        if (0 <= _index) and (len(self.imageList) > _index):
+            del self.imageList[_index]
+            self.listWidget.removeItemWidget(self.listWidget.item(_index))
+        else:
+            pass
+    
+    # Import images
+    def addImages(self):
         fileBrowser = QFileDialog()
-        fileBrowser.setFileMode(QFileDialog.ExistingFile)
+        fileBrowser.setFileMode(QFileDialog.ExistingFiles)
         fileBrowser.setNameFilter('Images ' + Image.SUPPORT_FORMAT)
         if fileBrowser.exec_():
-            fileNames = fileBrowser.selectedFiles()
-            img = Image(fileNames[0])
+            filePaths = fileBrowser.selectedFiles()
+            for path in filePaths:
+                self.addImage(path)
+            
+            lastItem = self.listWidget.item(self.listWidget.count() - 1)
+            self.listWidget.setCurrentItem(lastItem)
         else:
-            img = Image('')
+            pass
         
-        return img
+        return
