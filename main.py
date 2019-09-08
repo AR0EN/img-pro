@@ -18,9 +18,24 @@ from PyQt5.QtGui import QPixmap, QImage
 from images import Image, Images
 from main_window import Ui_MainWindow
 
+# Enable/Disable Debug Mode
+import os
+
+debugFlag = os.getenv('DEBUG')
+print('debugFlag: ' + str(debugFlag))
+if 'ON' == debugFlag:
+    print('Executing application in Debug Mode!')
+    def LOG(message):
+        print('[Debug] ' + message)
+    
+else:
+    print('Executing application in Optimized Mode!')
+    print('Note: Set environment variable DEBUG to \'ON\' before executing to enable Debug Mode.')
+    def LOG(message):
+        pass
 
 
-class Ui():
+class Main():
     SUPPORT_FORMAT = '(*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm *.svg)'
 
     def __init__(self):
@@ -48,18 +63,18 @@ class Ui():
     def display(self, _img):
         if _img.valid:
             # Convert to 8-bit if needed
-            print(_img.name + ': ' + str(_img.mat.dtype))
-            if (np.dtype(np.uint16) == _img.mat.dtype) :
-                print('Converting ' + _img.name + ' to 8-bit')
-                matU8 = (np.right_shift(_img.mat, 8)).astype(np.uint8)
+            LOG(_img.name + ': ' + str(_img.data.dtype))
+            if (np.dtype(np.uint16) == _img.data.dtype) :
+                LOG('Converting ' + _img.name + ' to 8-bit')
+                imgDataU8 = (np.right_shift(_img.data, 8)).astype(np.uint8)
             else:
-                matU8 = _img.mat
+                imgDataU8 = _img.data
                 
             # Resize
             displayWidth = self.gui.labelCanvas.width()
             displayHeight = self.gui.labelCanvas.height()
 
-            height, width, channel = matU8.shape
+            height, width, channel = imgDataU8.shape
             
             hFactor = float(displayHeight)/height
             wFactor = float(displayWidth)/width
@@ -67,26 +82,26 @@ class Ui():
             if (wFactor > hFactor) and (displayHeight < height):
                 height = displayHeight
                 width = int(width * hFactor)
-                matU8Resized = cv2.resize(matU8,(width,height))
+                imgDataResizedU8 = cv2.resize(imgDataU8,(width,height))
                 
             elif (wFactor < hFactor) and (displayWidth < width):
                 height = int(height * wFactor)
                 width = displayWidth
-                matU8Resized = cv2.resize(matU8,(width,height))
+                imgDataResizedU8 = cv2.resize(imgDataU8,(width,height))
                 
             elif (displayHeight < height):
                 height = displayHeight
                 width = displayWidth
-                matU8Resized = cv2.resize(matU8,(displayWidth, displayHeight))
+                imgDataResizedU8 = cv2.resize(imgDataU8,(displayWidth, displayHeight))
             else:
-                matU8Resized = matU8
+                imgDataResizedU8 = imgDataU8
             
             # Convert BGR to RGB
-            b,g,r = cv2.split(matU8Resized)
-            matU8Resized = cv2.merge([r,g,b])
+            b,g,r = cv2.split(imgDataResizedU8)
+            imgDataResizedU8 = cv2.merge([r,g,b])
             
             bytesPerLine = 3 * width
-            qImg = QImage(matU8Resized, width, height, bytesPerLine, QImage.Format_RGB888)
+            qImg = QImage(imgDataResizedU8, width, height, bytesPerLine, QImage.Format_RGB888)
             
             pixmap = QPixmap(qImg)
             self.gui.labelCanvas.setPixmap(pixmap)
@@ -101,7 +116,7 @@ class Ui():
 
     # Import images
     def actionImportClickEvt(self):
-        self.imgList.addImages()
+        self.imgList.importImages()
 
     # Export changes to a new image
     def actionExportClickEvt(self):
@@ -117,5 +132,5 @@ class Ui():
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    window = Ui()
+    window = Main()
     sys.exit(app.exec_())

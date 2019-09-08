@@ -18,10 +18,10 @@ class Image:
     
     def __init__(self, _fullPath):
         if '' != _fullPath:
-            self.fullPath = _fullPath
+            self.filePath = _fullPath
             self.name = os.path.basename(_fullPath)
-            self.mat = cv2.imread(_fullPath, cv2.IMREAD_UNCHANGED)
-            if isinstance(self.mat, type(None)):
+            self.data = cv2.imread(_fullPath, cv2.IMREAD_UNCHANGED)
+            if isinstance(self.data, type(None)):
                 self.valid = False
                 
             else:
@@ -30,8 +30,6 @@ class Image:
         else:
             self.valid = False
 
-    def getData(self):
-        return self.mat.data
 
 class Images():
     # Maximum Size of the queue
@@ -63,7 +61,7 @@ class Images():
         else:
             pass
     
-    def removeItem(self, _index):
+    def removeImage(self, _index):
         if (0 <= _index) and (len(self.imageList) > _index):
             del self.imageList[_index]
             self.listWidget.removeItemWidget(self.listWidget.item(_index))
@@ -71,7 +69,7 @@ class Images():
             pass
     
     # Import images
-    def addImages(self):
+    def importImages(self):
         fileBrowser = QFileDialog()
         fileBrowser.setFileMode(QFileDialog.ExistingFiles)
         fileBrowser.setNameFilter('Images ' + Image.SUPPORT_FORMAT)
