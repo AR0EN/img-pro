@@ -82,17 +82,17 @@ class Main():
             if (wFactor > hFactor) and (displayHeight < height):
                 height = displayHeight
                 width = int(width * hFactor)
-                imgDataResizedU8 = cv2.resize(imgDataU8,(width,height))
+                imgDataResizedU8 = cv2.resize(imgDataU8,(width,height), interpolation=Image.INTERPOLATION_METHOD)
                 
             elif (wFactor < hFactor) and (displayWidth < width):
                 height = int(height * wFactor)
                 width = displayWidth
-                imgDataResizedU8 = cv2.resize(imgDataU8,(width,height))
+                imgDataResizedU8 = cv2.resize(imgDataU8,(width,height), interpolation=Image.INTERPOLATION_METHOD)
                 
             elif (displayHeight < height):
                 height = displayHeight
                 width = displayWidth
-                imgDataResizedU8 = cv2.resize(imgDataU8,(displayWidth, displayHeight))
+                imgDataResizedU8 = cv2.resize(imgDataU8,(displayWidth, displayHeight), interpolation=Image.INTERPOLATION_METHOD)
             else:
                 imgDataResizedU8 = imgDataU8
             

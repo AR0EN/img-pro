@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import QFileDialog, QListWidget, QListWidgetItem
 class Image:
     # Supported Image Formats (refer to OpenCV imread() for more details)
     SUPPORT_FORMAT = '(*.bmp *.dib *.jpeg *.jpg *.png *.pbm *.pgm *.ppm *.tiff *.tif)'
+    INTERPOLATION_METHOD = cv2.INTER_AREA
     
     def __init__(self, _fullPath):
         if '' != _fullPath:
