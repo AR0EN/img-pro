@@ -3,6 +3,16 @@ img-pro
 
 ## Introduction
 
+## Dependencies
+1. Python 2.7
+2. PyQt5
+3. OpenCV for Python
+
+## User guide
+1. Convert <GIT Root>/ui/*.ui to python source files
+2. Copy generated source files to <GIT Root>
+3. In <GIT Root>, execute: python -m main
+
 ## Commit convention
 1. Separate subject from body (optional) with a blank line
 2. Limit the subject line to 50 characters
