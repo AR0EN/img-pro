@@ -47,12 +47,7 @@ class Main():
         # Actions
         self.gui.actionImport.triggered.connect(self.actionImportClickEvt)
         self.gui.actionTBImport.triggered.connect(self.actionImportClickEvt)
-        
-        self.gui.actionExport.triggered.connect(self.actionExportClickEvt)
-        self.gui.actionTBExport.triggered.connect(self.actionExportClickEvt)
-        
-        self.gui.actionSave.triggered.connect(self.actionSaveClickEvt)
-        self.gui.actionTBSave.triggered.connect(self.actionSaveClickEvt)
+
         self.gui.actionExit.triggered.connect(self.actionExitClickEvt)
         
         self.gui.listWidgetImgList.currentItemChanged.connect(self.actionCurrentItemChangedEvt)
@@ -117,14 +112,6 @@ class Main():
     # Import images
     def actionImportClickEvt(self):
         self.imgList.importImages()
-
-    # Export changes to a new image
-    def actionExportClickEvt(self):
-        pass
-
-    # Save changes
-    def actionSaveClickEvt(self):
-        pass
 
     # Exit
     def actionExitClickEvt(self):
