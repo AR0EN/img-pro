@@ -9,6 +9,8 @@ import os
 
 import cv2
 
+import numpy as np
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFileDialog, QListWidget, QListWidgetItem
 
@@ -22,6 +24,7 @@ class Image:
             self.filePath = _fullPath
             self.name = os.path.basename(_fullPath)
             self.data = cv2.imread(_fullPath, cv2.IMREAD_UNCHANGED)
+            self.displayData = Image.convertToRGBU8(self.data)
             if isinstance(self.data, type(None)):
                 self.valid = False
                 
@@ -30,7 +33,20 @@ class Image:
             
         else:
             self.valid = False
-
+    
+    # Convert input data int 8-bit RGB data (for display purpose)
+    @staticmethod
+    def convertToRGBU8(inputData):
+        if (np.dtype(np.uint16) == inputData.dtype) :
+            dataBGRU8 = (np.right_shift(inputData, 8)).astype(np.uint8)
+        else:
+            dataBGRU8 = _img.data
+        
+        # Convert BGR to RGB
+        b,g,r = cv2.split(dataBGRU8)
+        dataRGBU8 = cv2.merge([r,g,b])
+        
+        return dataRGBU8
 
 class Images():
     # Maximum Size of the queue

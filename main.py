@@ -57,19 +57,11 @@ class Main():
     # Display an image
     def display(self, _img):
         if _img.valid:
-            # Convert to 8-bit if needed
-            LOG(_img.name + ': ' + str(_img.data.dtype))
-            if (np.dtype(np.uint16) == _img.data.dtype) :
-                LOG('Converting ' + _img.name + ' to 8-bit')
-                imgDataU8 = (np.right_shift(_img.data, 8)).astype(np.uint8)
-            else:
-                imgDataU8 = _img.data
-                
             # Resize
             displayWidth = self.gui.labelCanvas.width()
             displayHeight = self.gui.labelCanvas.height()
 
-            height, width, channel = imgDataU8.shape
+            height, width, channel = _img.displayData.shape
             
             hFactor = float(displayHeight)/height
             wFactor = float(displayWidth)/width
@@ -77,26 +69,22 @@ class Main():
             if (wFactor > hFactor) and (displayHeight < height):
                 height = displayHeight
                 width = int(width * hFactor)
-                imgDataResizedU8 = cv2.resize(imgDataU8,(width,height), interpolation=Image.INTERPOLATION_METHOD)
+                imgDataResized = cv2.resize(_img.displayData,(width,height), interpolation=Image.INTERPOLATION_METHOD)
                 
             elif (wFactor < hFactor) and (displayWidth < width):
                 height = int(height * wFactor)
                 width = displayWidth
-                imgDataResizedU8 = cv2.resize(imgDataU8,(width,height), interpolation=Image.INTERPOLATION_METHOD)
+                imgDataResized = cv2.resize(_img.displayData,(width,height), interpolation=Image.INTERPOLATION_METHOD)
                 
             elif (displayHeight < height):
                 height = displayHeight
                 width = displayWidth
-                imgDataResizedU8 = cv2.resize(imgDataU8,(displayWidth, displayHeight), interpolation=Image.INTERPOLATION_METHOD)
+                imgDataResized = cv2.resize(_img.displayData,(displayWidth, displayHeight), interpolation=Image.INTERPOLATION_METHOD)
             else:
-                imgDataResizedU8 = imgDataU8
-            
-            # Convert BGR to RGB
-            b,g,r = cv2.split(imgDataResizedU8)
-            imgDataResizedU8 = cv2.merge([r,g,b])
+                imgDataResized = _img.displayData
             
             bytesPerLine = 3 * width
-            qImg = QImage(imgDataResizedU8, width, height, bytesPerLine, QImage.Format_RGB888)
+            qImg = QImage(imgDataResized, width, height, bytesPerLine, QImage.Format_RGB888)
             
             pixmap = QPixmap(qImg)
             self.gui.labelCanvas.setPixmap(pixmap)
