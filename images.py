@@ -40,7 +40,7 @@ class Image:
         if (np.dtype(np.uint16) == inputData.dtype) :
             dataBGRU8 = (np.right_shift(inputData, 8)).astype(np.uint8)
         else:
-            dataBGRU8 = _img.data
+            dataBGRU8 = inputData
         
         # Convert BGR to RGB
         b,g,r = cv2.split(dataBGRU8)

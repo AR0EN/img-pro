@@ -408,41 +408,20 @@ color: rgb(180, 180, 180);</string>
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionTBImport">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/win7/add/1679.ico</normaloff>../icons/win7/add/1679.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Import</string>
-   </property>
-  </action>
-  <action name="actionTBExport">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/win7/export/1279.ico</normaloff>../icons/win7/export/1279.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Export</string>
-   </property>
-  </action>
-  <action name="actionTBSave">
-   <property name="icon">
-    <iconset>
-     <normaloff>../icons/win7/save/1999.ico</normaloff>../icons/win7/save/1999.ico</iconset>
-   </property>
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
    </property>
   </action>
   <action name="actionEdit">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Edit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+E</string>
    </property>
   </action>
   <action name="actionHDR">

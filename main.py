@@ -17,6 +17,7 @@ from PyQt5.QtGui import QPixmap, QImage
 
 from images import Image, Images
 from main_window import Ui_MainWindow
+from editor import Ui_EditorWindow
 
 # Enable/Disable Debug Mode
 import os
@@ -42,12 +43,16 @@ class Main():
         self.mainWindow = QtWidgets.QMainWindow()
         self.gui = Ui_MainWindow()
         self.gui.setupUi(self.mainWindow)
+        
+        self.subWindows = []
+        
         self.imgList = Images(self.gui.listWidgetImgList)
         
         # Actions
         self.gui.actionImport.triggered.connect(self.actionImportClickEvt)
-        self.gui.actionTBImport.triggered.connect(self.actionImportClickEvt)
-
+        
+        self.gui.actionEdit.triggered.connect(self.actionEditClickEvt)
+        
         self.gui.actionExit.triggered.connect(self.actionExitClickEvt)
         
         self.gui.listWidgetImgList.currentItemChanged.connect(self.actionCurrentItemChangedEvt)
@@ -96,10 +101,21 @@ class Main():
     def actionCurrentItemChangedEvt(self):
         currentRow = self.gui.listWidgetImgList.currentRow()
         self.display(self.imgList.images[currentRow])
+        
+        # Enable Edit Action
+        self.gui.actionEdit.setEnabled(True)
 
     # Import images
     def actionImportClickEvt(self):
         self.imgList.importImages()
+    
+    # Edit selected image
+    def actionEditClickEvt(self):
+        editorWindow = QtWidgets.QMainWindow()
+        editor = Ui_EditorWindow()
+        editor.setupUi(editorWindow)
+        self.subWindows.append(editorWindow)
+        editorWindow.show()
 
     # Exit
     def actionExitClickEvt(self):

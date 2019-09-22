@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="toolbar">
+    <file>icons/win7/save/1999.ico</file>
+    <file>icons/crop.png</file>
+    <file>icons/rotate.png</file>
+  </qresource>
+</RCC>
