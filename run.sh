@@ -27,9 +27,9 @@ result="$?"
 
 if [ "0" != "$result" ]; then
     echo "Please make sure the following items installed properly:"
-    echo "\t Python"
-    echo "\t OpenCV v4.1.0 or above"
-    echo "\t PyQt5"
+    echo $'\t Python'
+    echo $'\t OpenCV v4.1.0 or above'
+    echo $'\t PyQt5'
     exit 1
 fi
 
