@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Sep 29 22:00:00 2019
+
+@author: Le Huy Hoang
+"""
+
 import sys
 
 print("Checking dependencies:")
