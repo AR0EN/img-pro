@@ -21,7 +21,7 @@ except:
     print("\tOpenCV: " + " -- failed!")
 
 
-#PyQt5
+# PyQt5
 try:
     from PyQt5.Qt import PYQT_VERSION_STR
     print("\tPyQt: " + PYQT_VERSION_STR + " -- passed!")
@@ -29,6 +29,8 @@ try:
 except:
     result = False
     print("\tPyQt: " + " -- failed!")
+
+print('')
 
 # Return
 if result:
