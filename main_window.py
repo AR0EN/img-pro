@@ -1,15 +1,9 @@
 
-from cv2 import cv2
-
-import numpy as np
-
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QPixmap, QImage
-
-from images import Image, Images
+from images import Images
 from ui_main_window import Ui_MainWindow
 from editor_window import EditorWindow
+from wrapper import CommonFunctions
 
 class MainWindow():
     SUPPORT_FORMAT = '(*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm *.svg)'
@@ -35,42 +29,9 @@ class MainWindow():
         self.mainWindow.show()
     
     # Display an image
-    def display(self, _img):
-        if _img.valid:
-            # Resize
-            displayWidth = self.gui.labelCanvas.width()
-            displayHeight = self.gui.labelCanvas.height()
-
-            height, width, channel = _img.displayData.shape
-            
-            hFactor = float(displayHeight)/height
-            wFactor = float(displayWidth)/width
-            
-            if (wFactor > hFactor) and (displayHeight < height):
-                height = displayHeight
-                width = int(width * hFactor)
-                imgDataResized = cv2.resize(_img.displayData,(width,height), interpolation=Image.INTERPOLATION_METHOD)
-                
-            elif (wFactor < hFactor) and (displayWidth < width):
-                height = int(height * wFactor)
-                width = displayWidth
-                imgDataResized = cv2.resize(_img.displayData,(width,height), interpolation=Image.INTERPOLATION_METHOD)
-                
-            elif (displayHeight < height):
-                height = displayHeight
-                width = displayWidth
-                imgDataResized = cv2.resize(_img.displayData,(displayWidth, displayHeight), interpolation=Image.INTERPOLATION_METHOD)
-            else:
-                imgDataResized = _img.displayData
-            
-            bytesPerLine = 3 * width
-            qImg = QImage(imgDataResized, width, height, bytesPerLine, QImage.Format_RGB888)
-            
-            pixmap = QPixmap(qImg)
-            self.gui.labelCanvas.setPixmap(pixmap)
-            
-        else:
-            pass
+    def display(self, imported_image):
+        display_main = CommonFunctions(imported_image, self.gui)
+        display_main.display()
     
     # Display Current Item when it changed
     def actionCurrentItemChangedEvt(self):

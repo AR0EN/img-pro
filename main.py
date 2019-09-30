@@ -6,18 +6,8 @@ Created on Tue Aug 13 20:55:37 2019
 """
 
 import sys
-
-import cv2
-
-import numpy as np
-
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QPixmap, QImage
-
-from images import Image, Images
 from main_window import MainWindow
-
 # Enable/Disable Debug Mode
 import os
 
