@@ -28,15 +28,11 @@ class MainWindow():
         
         self.mainWindow.show()
     
-    # Display an image
-    def display(self, imported_image):
-        display_main = CommonFunctions(imported_image, self.gui)
-        display_main.display()
-    
     # Display Current Item when it changed
     def actionCurrentItemChangedEvt(self):
         currentRow = self.gui.listWidgetImgList.currentRow()
-        self.display(self.imgList.images[currentRow])
+        display_main = CommonFunctions(self.imgList.images[currentRow], self.gui)
+        display_main.display()
         # Enable Edit Action
         self.gui.actionEdit.setEnabled(True)
         return self.imgList.images[currentRow]

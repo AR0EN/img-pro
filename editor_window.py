@@ -13,13 +13,9 @@ class EditorWindow():
         self.editor.setupUi(self.editorWindow)
         self.gui = Ui_EditorWindow()
         self.gui.setupUi(self.editorWindow)
-
-    # Display an image
-    def display(self):
-        display_editor = CommonFunctions(self.imported_image, self.gui)
-        display_editor.display()
+        self.display_editor = CommonFunctions(self.imported_image, self.gui)
 
     # Edit selected image
     def actionEditorClickEvt(self):
-        self.display()
+        self.display_editor.display()
         self.editorWindow.show()
