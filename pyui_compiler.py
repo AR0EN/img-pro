@@ -1,14 +1,28 @@
+#############################################################################
+##
+## Copyright (c) 2019 Le Huy Hoang <lehoang318@gmail.com>
+## 
+## This file is inherited from PyQt5: pyuic.py.
+##
+# This file may be used under the terms of the GNU General Public License
+# version 3.0 as published by the Free Software Foundation and appearing in
+# the file LICENSE included in the packaging of this file.  Please review the
+# following information to ensure the GNU General Public License version 3.0
+# requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+# 
+# If you do not wish to use this file under the terms of the GPL version 3.0
+# then you may purchase a commercial license.
+# 
+# This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+# WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+#############################################################################
+
 import sys
 import optparse
 
 from PyQt5 import QtCore
 
 from PyQt5.uic.driver import Driver
-
-if sys.hexversion >= 0x03000000:
-    from PyQt5.uic.port_v3.invoke import invoke
-else:
-    from PyQt5.uic.port_v2.invoke import invoke
 
 class PyUiCompiler:
     Version = "Python User Interface Compiler %s for Qt version %s" % (QtCore.PYQT_VERSION_STR, QtCore.QT_VERSION_STR)
@@ -42,4 +56,24 @@ class PyUiCompiler:
     def generate(self, argumentList):
         # Format: [<ui file path>, <option 1>, <argument 1>, ...]
         opts, args = self.parser.parse_args(argumentList)
-        invoke(Driver(opts, args[0]))
+
+        driver = Driver(opts, args[0])
+        exit_status = 1
+        
+        try:
+            exit_status = driver.invoke()
+            
+        except IOError as e:
+            driver.on_IOError(e)
+            
+        except SyntaxError as e:
+            driver.on_SyntaxError(e)
+            
+        except NoSuchClassError as e:
+            driver.on_NoSuchClassError(e)
+            
+        except NoSuchWidgetError as e:
+            driver.on_NoSuchWidgetError(e)
+            
+        except Exception as e:
+            driver.on_Exception(e)
