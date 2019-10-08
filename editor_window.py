@@ -37,6 +37,13 @@ class EditorWindow(QtWidgets.QMainWindow):
         
         self.ui = Ui_EditorWindow()
         self.ui.setupUi(self)
+        
+        # Actions
+        self.ui.actionCrop.triggered.connect(self.actionCropClickEvt)
+        self.ui.actionRotate.triggered.connect(self.actionRotateClickEvt)
+        self.ui.actionSave.triggered.connect(self.actionSaveClickEvt)
+        self.ui.actionReset.triggered.connect(self.actionResetClickEvt)
+                
         # Set title
         imageFileName = imported_image.name.split('.')[0]
         self.setWindowTitle(imageFileName)
@@ -44,6 +51,23 @@ class EditorWindow(QtWidgets.QMainWindow):
         CommonFunctions.display(self.editingImage, self.ui.labelCanvas)
         self.show()
         
+    def actionCropClickEvt(self):
+        print('EditorWindow.actionCropClickEvt')
+        pass
+    
+    def actionRotateClickEvt(self):
+        print('EditorWindow.actionRotateClickEvt')
+        pass
+    
+    def actionSaveClickEvt(self):
+        print('EditorWindow.actionSaveClickEvt')
+        pass
+    
+    def actionResetClickEvt(self):
+        print('EditorWindow.actionResetClickEvt')
+        pass
+    
+    
     def closeEvent(self, event):
         LOG("[EditorWindow.closeEvent()] Closing " + self.windowTitle() + " Window")
         # Notify MainWindow

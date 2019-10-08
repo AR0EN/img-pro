@@ -17,18 +17,6 @@ class State():
         # Crop Rectangle Dimensions
         self.cropRectW = 0
         self.cropRectH = 0
-        
-    def __init__(self, _rotateAngle, _cropRectX, _cropRectY, _cropRectW, _cropRectH):
-        # Rotated Angle (degree)
-        self.rotateAngle = _rotateAngle
-        
-        # Crop Rectangle Position
-        self.cropRectX = _cropRectX
-        self.cropRectY = _cropRectY
-        
-        # Crop Rectangle Dimensions
-        self.cropRectW = _cropRectW
-        self.cropRectH = _cropRectH
     
     def set(self, _rotateAngle, _cropRectX, _cropRectY, _cropRectW, _cropRectH):
         # Rotated Angle (degree)
