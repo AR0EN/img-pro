@@ -10,8 +10,13 @@ import os
 
 from PyQt5 import QtWidgets
 from ui_editor_window import Ui_EditorWindow
+
 from wrapper import CommonFunctions
+
 from images import Image
+
+from state import State
+
 from log import LOG
 
 class EditorWindow(QtWidgets.QMainWindow):
@@ -28,11 +33,12 @@ class EditorWindow(QtWidgets.QMainWindow):
         self.mainWindow = _mainWindow
         self.imported_image = imported_image
         self.editingImage = Image(Image.BY_DATA, imported_image.data)
+        self.curState = State()
         
         self.ui = Ui_EditorWindow()
         self.ui.setupUi(self)
         # Set title
-        imageFileName = os.path.basename(imported_image.filePath).split('.')[0]
+        imageFileName = imported_image.name.split('.')[0]
         self.setWindowTitle(imageFileName)
         
         CommonFunctions.display(self.editingImage, self.ui.labelCanvas)

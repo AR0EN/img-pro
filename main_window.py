@@ -14,8 +14,6 @@ from editor_window import EditorWindow
 from wrapper import CommonFunctions
 
 class MainWindow(QtWidgets.QMainWindow):
-    SUPPORT_FORMAT = '(*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm *.svg)'
-
     def __init__(self):
         # Initialize attributes of QtWidgets.QMainWindow
         if 3 > sys.version_info[0]:
@@ -26,25 +24,24 @@ class MainWindow(QtWidgets.QMainWindow):
             # Python 3
             super().__init__()
             
-        self.gui = Ui_MainWindow()
-        #self.gui.setupUi(self.mainWindow)
-        self.gui.setupUi(self)
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
         self.subWindows = []
-        self.imgList = Images(self.gui.listWidgetImgList)
+        self.imgList = Images(self.ui.listWidgetImgList)
         
         # Actions
-        self.gui.actionImport.triggered.connect(self.actionImportClickEvt)
-        self.gui.actionEdit.triggered.connect(self.actionEditClickEvt)
-        self.gui.actionExit.triggered.connect(self.actionExitClickEvt)
-        self.gui.listWidgetImgList.currentItemChanged.connect(self.actionCurrentItemChangedEvt)
+        self.ui.actionImport.triggered.connect(self.actionImportClickEvt)
+        self.ui.actionEdit.triggered.connect(self.actionEditClickEvt)
+        self.ui.actionExit.triggered.connect(self.actionExitClickEvt)
+        self.ui.listWidgetImgList.currentItemChanged.connect(self.actionCurrentItemChangedEvt)
         self.show()
     
     # Display Current Item when it changed
     def actionCurrentItemChangedEvt(self):
-        currentRow = self.gui.listWidgetImgList.currentRow()
-        CommonFunctions.display(self.imgList.images[currentRow], self.gui.labelCanvas)
+        currentRow = self.ui.listWidgetImgList.currentRow()
+        CommonFunctions.display(self.imgList.images[currentRow], self.ui.labelCanvas)
         # Enable Edit Action
-        self.gui.actionEdit.setEnabled(True)
+        self.ui.actionEdit.setEnabled(True)
 
     # Import images
     def actionImportClickEvt(self):
@@ -52,7 +49,7 @@ class MainWindow(QtWidgets.QMainWindow):
     
     # Edit selected image
     def actionEditClickEvt(self):
-        editor = EditorWindow(self, self.imgList.images[self.gui.listWidgetImgList.currentRow()])
+        editor = EditorWindow(self, self.imgList.images[self.ui.listWidgetImgList.currentRow()])
         self.subWindows.append(editor)
     
     # Terminate an Editor Window
