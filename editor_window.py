@@ -21,5 +21,5 @@ class EditorWindow():
         self.editorWindow.show()
 
     def actionSaveClickEvt(self):
-        save = SaveWindow()
-        self.subWindows = save.saveWindow
+        save = SaveWindow(self.imported_image)
+        self.subWindows = save

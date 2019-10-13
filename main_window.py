@@ -36,7 +36,7 @@ class MainWindow():
     # Edit selected image
     def actionEditClickEvt(self):
         editor = EditorWindow(self.imgList.images[self.gui.listWidgetImgList.currentRow()])
-        self.subWindows.append(editor.editorWindow)
+        self.subWindows.append(editor)
 
     # Exit
     def actionExitClickEvt(self):
