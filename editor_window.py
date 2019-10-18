@@ -10,10 +10,13 @@ import os
 
 from PyQt5 import QtWidgets
 from ui_editor_window import Ui_EditorWindow
+from rotation_dialog import RotationDialog
 
 from wrapper import CommonFunctions
 
 from images import Image
+
+import siso
 
 from state import State
 
@@ -38,6 +41,8 @@ class EditorWindow(QtWidgets.QMainWindow):
         self.ui = Ui_EditorWindow()
         self.ui.setupUi(self)
         
+        self.subDialogs = []
+        
         # Actions
         self.ui.actionCrop.triggered.connect(self.actionCropClickEvt)
         self.ui.actionRotate.triggered.connect(self.actionRotateClickEvt)
@@ -51,12 +56,26 @@ class EditorWindow(QtWidgets.QMainWindow):
         CommonFunctions.display(self.editingImage, self.ui.labelCanvas)
         self.show()
         
+    def getRotationAngle(self):
+        return self.curState.rotationAngle
+    
+    def setRotationAngle(self, _rotationAngle):
+        # Update current state
+        self.curState.rotationAngle = _rotationAngle
+        
+        # Rotate Editing Image
+        self.editingImage = siso.rotate(self.imported_image, self.curState.rotationAngle)
+        
+        # Display Rotated Image
+        CommonFunctions.display(self.editingImage, self.ui.labelCanvas)
+    
     def actionCropClickEvt(self):
         print('EditorWindow.actionCropClickEvt')
         pass
     
     def actionRotateClickEvt(self):
-        print('EditorWindow.actionRotateClickEvt')
+        rotationDiaglog = RotationDialog(self)
+        self.subDialogs.append(rotationDiaglog)
         pass
     
     def actionSaveClickEvt(self):
@@ -67,11 +86,14 @@ class EditorWindow(QtWidgets.QMainWindow):
         print('EditorWindow.actionResetClickEvt')
         pass
     
+    # Terminate an Editor Window
+    def terminateSubDialog(self, subDialog):
+        self.subDialogs.remove(subDialog)
     
     def closeEvent(self, event):
         LOG("[EditorWindow.closeEvent()] Closing " + self.windowTitle() + " Window")
         # Notify MainWindow
-        self.mainWindow.terminateEditorWindow(self)
+        self.mainWindow.terminateSubWindow(self)
         
         # Terminate sub-attributes/processes
         

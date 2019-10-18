@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogRotate</class>
- <widget class="QDialog" name="DialogRotate">
+ <class>RotationDialog</class>
+ <widget class="QDialog" name="RotationDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -88,6 +88,9 @@ color: rgb(195, 195, 195);</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButtonRL">

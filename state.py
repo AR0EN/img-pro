@@ -8,7 +8,7 @@ Created on Tue Oct  8 21:34:48 2019
 class State():
     def __init__(self):
         # Rotated Angle (degree)
-        self.rotateAngle = 0.0
+        self.rotationAngle = 0.0
         
         # Crop Rectangle Position
         self.cropRectX = 0
@@ -18,9 +18,9 @@ class State():
         self.cropRectW = 0
         self.cropRectH = 0
     
-    def set(self, _rotateAngle, _cropRectX, _cropRectY, _cropRectW, _cropRectH):
+    def set(self, _rotationAngle, _cropRectX, _cropRectY, _cropRectW, _cropRectH):
         # Rotated Angle (degree)
-        self.rotateAngle = _rotateAngle
+        self.rotationAngle = _rotationAngle
         
         # Crop Rectangle Position
         self.cropRectX = _cropRectX

@@ -52,9 +52,9 @@ class MainWindow(QtWidgets.QMainWindow):
         editor = EditorWindow(self, self.imgList.images[self.ui.listWidgetImgList.currentRow()])
         self.subWindows.append(editor)
     
-    # Terminate an Editor Window
-    def terminateEditorWindow(self, editorWindow):
-        self.subWindows.remove(editorWindow)
+    # Terminate an Sub Window
+    def terminateSubWindow(self, subWindow):
+        self.subWindows.remove(subWindow)
     
     # Exit
     def actionExitClickEvt(self):
