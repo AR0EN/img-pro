@@ -45,5 +45,14 @@ def rotate(iImg, angle):
     
     return oImg
 
-def flip(iImg, dimension):
-    return iImg
+# Flip input image vertically (FLIP_V)/horizontally (FLIP_H)
+FLIP_V = 0
+FLIP_H = 1
+def flip(iImg, flipAxis):
+    if (FLIP_V == flipAxis) or (FLIP_H == flipAxis):
+        oImg = Image(Image.BY_DATA, cv2.flip(iImg.data, flipAxis))
+        
+    else:
+        oImg = None
+        
+    return oImg

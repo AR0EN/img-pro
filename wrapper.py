@@ -1,4 +1,4 @@
-from cv2 import cv2
+import cv2
 from PyQt5.QtGui import QPixmap, QImage
 from images import Image
 

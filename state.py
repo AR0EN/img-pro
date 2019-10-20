@@ -7,6 +7,10 @@ Created on Tue Oct  8 21:34:48 2019
 
 class State():
     def __init__(self):
+        # Flip State
+        self.flippedV = False
+        self.flippedH = False
+
         # Rotated Angle (degree)
         self.rotationAngle = 0.0
         
@@ -18,7 +22,20 @@ class State():
         self.cropRectW = 0
         self.cropRectH = 0
     
-    def set(self, _rotationAngle, _cropRectX, _cropRectY, _cropRectW, _cropRectH):
+    def set(self, _flippedV, _flippedH, _rotationAngle, _cropRectX, _cropRectY, _cropRectW, _cropRectH):
+        # Flip State
+        if True == _flippedV:
+            self.flippedV = True
+            
+        else:
+            self.flippedV = False
+        
+        if True == _flippedH:
+            self.flippedH = True
+            
+        else:
+            self.flippedH = False
+        
         # Rotated Angle (degree)
         self.rotationAngle = _rotationAngle
         
