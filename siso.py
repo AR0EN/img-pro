@@ -10,9 +10,11 @@ import numpy as np
 
 from images import Image
 
+from log import LOG
+
 # Rotate input image by an angle of degrees (Clockwise)
 def rotate(iImg, angle):
-    print('Rotation Angle: ' + str(angle))
+    LOG(None, 'Rotation Angle: ' + str(angle))
     if 90 == angle:
         oImg = Image(Image.BY_DATA, cv2.rotate(iImg.data,rotateCode = cv2.ROTATE_90_CLOCKWISE))
         

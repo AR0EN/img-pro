@@ -8,6 +8,7 @@ Created on Tue Oct 18 20:50:00 2019
 import sys
 import os
 
+from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from ui_rotation_dialog import Ui_RotationDialog
 
@@ -24,7 +25,7 @@ class RotationDialog(QtWidgets.QDialog):
     BY_DATA = 1
     
     ### Constructor
-    def __init__(self, _editorWindow):
+    def __init__(self, _parentWidget):
         # Initialize attributes of QtWidgets.QDialog
         if 3 > sys.version_info[0]:
             # Python 2
@@ -34,10 +35,23 @@ class RotationDialog(QtWidgets.QDialog):
             # Python 3
             super().__init__()
         
-        self.editorWindow = _editorWindow
+        # Widget to be deleted when it is closed
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         
+        self.parentWidget = _parentWidget
+        
+        # Initialize UI components
         self.ui = Ui_RotationDialog()
         self.ui.setupUi(self)
+        
+        # Get current Rotation Angle of Editing Image
+        rotationAngle = self.parentWidget.getRotationAngle()
+        
+        # Update Rotation Angle Slider
+        self.ui.horizontalSliderAngle.setValue(rotationAngle)
+        
+        # Update Rotation Angle Text Box
+        self.ui.lineEditAngle.setText(str(rotationAngle))
         
         # Actions
         self.ui.horizontalSliderAngle.sliderReleased.connect(self.actionHorizontalSliderAngleSliderReleasedEvt)
@@ -49,6 +63,16 @@ class RotationDialog(QtWidgets.QDialog):
         self.show()
         
     
+    ### Destructor
+    def __del__(self):
+        LOG(self, 'Finalizing ' + self.windowTitle() + ' Window')
+        
+    
+    # Remove the link to Parent Widget
+    def unlinkToParentWidget(self):
+        self.parentWidget = None
+        
+    
     ### Event Handlers
     def actionHorizontalSliderAngleSliderReleasedEvt(self):
         # Get new Rotation Angle
@@ -58,12 +82,12 @@ class RotationDialog(QtWidgets.QDialog):
         self.ui.lineEditAngle.setText(str(rotationAngle))
         
         # Notify Editor Window
-        self.editorWindow.setRotationAngle(rotationAngle)
+        self.parentWidget.setRotationAngle(rotationAngle)
         
     
     def actionPushButtonRLClickEvt(self):
         # Calculate new Rotation Angle
-        rotationAngle = self.editorWindow.getRotationAngle() - 90
+        rotationAngle = self.parentWidget.getRotationAngle() - 90
         if 0 > rotationAngle:
             rotationAngle = rotationAngle + 360
         else:
@@ -76,12 +100,12 @@ class RotationDialog(QtWidgets.QDialog):
         self.ui.lineEditAngle.setText(str(rotationAngle))
         
         # Notify Editor Window
-        self.editorWindow.setRotationAngle(rotationAngle)
+        self.parentWidget.setRotationAngle(rotationAngle)
         
     
     def actionPushButtonRRClickEvt(self):
         # Calculate new Rotation Angle
-        rotationAngle = self.editorWindow.getRotationAngle() + 90
+        rotationAngle = self.parentWidget.getRotationAngle() + 90
         if 360 < rotationAngle:
             rotationAngle = rotationAngle - 360
         else:
@@ -94,30 +118,33 @@ class RotationDialog(QtWidgets.QDialog):
         self.ui.lineEditAngle.setText(str(rotationAngle))
         
         # Notify Editor Window
-        self.editorWindow.setRotationAngle(rotationAngle)
+        self.parentWidget.setRotationAngle(rotationAngle)
         
     
     def actionPushButtonFlipHClickEvt(self):
-        self.editorWindow.flipHorizontal()
+        self.parentWidget.flipHorizontal()
         
     
     def actionPushButtonFlipVClickEvt(self):
-        self.editorWindow.flipVertical()
+        self.parentWidget.flipVertical()
         
     
     def closeEvent(self, event):
-        LOG("[RotationDialog.closeEvent()] Closing " + self.windowTitle() + " Window")
-        # Notify Editor Window
-        self.editorWindow.terminateSubDialog(self)
-        
+        LOG(self, 'Closing ' + self.windowTitle() + ' Window')
         # Terminate sub-attributes/processes
+        
+        # Notify Parent Widget
+        if None != self.parentWidget:
+            self.parentWidget.removeSubWidget(self)
         
         # Call QtWidgets.QMainWindow 's procedure
         if 3 > sys.version_info[0]:
             # Python 2
-            super(RotationDialog, self).closeEvent(event)
+            super(EditorWindow, self).closeEvent(event)
             
         else:
             # Python 3
             super().closeEvent(event)
             
+        
+    
