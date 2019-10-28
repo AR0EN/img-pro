@@ -12,15 +12,10 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from ui_rotation_dialog import Ui_RotationDialog
 
-from wrapper import CommonFunctions
-
-from images import Image
-
-from state import State
-
+from wrapper import DialogWrapper
 from log import LOG
 
-class RotationDialog(QtWidgets.QDialog):
+class RotationDialog(DialogWrapper):
     ### Constants
     BY_DATA = 1
     
@@ -66,11 +61,6 @@ class RotationDialog(QtWidgets.QDialog):
     ### Destructor
     def __del__(self):
         LOG(self, 'Finalizing ' + self.windowTitle() + ' Window')
-        
-    
-    # Remove the link to Parent Widget
-    def unlinkToParentWidget(self):
-        self.parentWidget = None
         
     
     ### Event Handlers
@@ -127,24 +117,5 @@ class RotationDialog(QtWidgets.QDialog):
     
     def actionPushButtonFlipVClickEvt(self):
         self.parentWidget.flipVertical()
-        
-    
-    def closeEvent(self, event):
-        LOG(self, 'Closing ' + self.windowTitle() + ' Window')
-        # Terminate sub-attributes/processes
-        
-        # Notify Parent Widget
-        if None != self.parentWidget:
-            self.parentWidget.removeSubWidget(self)
-        
-        # Call QtWidgets.QMainWindow 's procedure
-        if 3 > sys.version_info[0]:
-            # Python 2
-            super(EditorWindow, self).closeEvent(event)
-            
-        else:
-            # Python 3
-            super().closeEvent(event)
-            
         
     

@@ -9,14 +9,15 @@ import sys
 
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
-from images import Images
-from ui_main_window import Ui_MainWindow
-from editor_window import EditorWindow
-from wrapper import CommonFunctions
 
+from ui_main_window import Ui_MainWindow
+
+from editor_window import EditorWindow
+from wrapper import WindowWrapper
+from images import Images
 from log import LOG
 
-class MainWindow(QtWidgets.QMainWindow):
+class MainWindow(WindowWrapper):
     ### Constructor
     def __init__(self):
         # Initialize attributes of QtWidgets.QMainWindow
@@ -28,12 +29,13 @@ class MainWindow(QtWidgets.QMainWindow):
             # Python 3
             super().__init__()
             
-        # Widget to be deleted when it is closed
-        #self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.subWidgets = []
+        
+        # Map labelCanvas pointer to the real instance
+        self.labelCanvas = self.ui.labelCanvas
+        
         self.imgList = Images(self.ui.listWidgetImgList)
         
         # Actions
@@ -49,16 +51,15 @@ class MainWindow(QtWidgets.QMainWindow):
         LOG(self, 'Finalizing ' + self.windowTitle() + ' Window')
         
     
-    # Remove a SubWidget
-    def removeSubWidget(self, subWidget):
-        self.subWidgets.remove(subWidget)
-        
-    
     ### Event Handlers
     # Display Current Item when it changed
     def actionCurrentItemChangedEvt(self):
+        # Get selected row index
         currentRow = self.ui.listWidgetImgList.currentRow()
-        CommonFunctions.display(self.imgList.images[currentRow], self.ui.labelCanvas)
+        
+        # Display selected image
+        self.display(self.imgList.images[currentRow])
+        
         # Enable Edit Action
         self.ui.actionEdit.setEnabled(True)
         
@@ -70,33 +71,14 @@ class MainWindow(QtWidgets.QMainWindow):
     
     # Edit selected image
     def actionEditClickEvt(self):
-        editor = EditorWindow(self, self.imgList.images[self.ui.listWidgetImgList.currentRow()])
+        selectedIndex = self.ui.listWidgetImgList.currentRow()
+        selectedImg = self.imgList.images[selectedIndex]
+        editor = EditorWindow(self, selectedImg)
         self.subWidgets.append(editor)
-        
-    
-    def closeEvent(self, event):
-        LOG(self, 'Closing ' + self.windowTitle() + ' Window')
-        # Terminate sub-attributes/processes
-        for subWidget in self.subWidgets:
-            subWidget.unlinkToParentWidget()
-            subWidget.close()
-            
-        self.subWidgets.clear()
-        
-        # Notify Parent Widget
-        
-        # Call QtWidgets.QMainWindow 's procedure
-        if 3 > sys.version_info[0]:
-            # Python 2
-            super(EditorWindow, self).closeEvent(event)
-            
-        else:
-            # Python 3
-            super().closeEvent(event)
-            
         
     
     # Exit
     def actionExitClickEvt(self):
         self.close()
+        
     

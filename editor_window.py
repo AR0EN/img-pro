@@ -10,20 +10,18 @@ import os
 
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
+
 from ui_editor_window import Ui_EditorWindow
 from rotation_dialog import RotationDialog
 
-from wrapper import CommonFunctions
-
+from wrapper import WindowWrapper
+from state import State
 from images import Image
+from log import LOG
 
 import siso
 
-from state import State
-
-from log import LOG
-
-class EditorWindow(QtWidgets.QMainWindow):
+class EditorWindow(WindowWrapper):
     ### Constructor
     def __init__(self, _parentWidget, originalImg):
         # Initialize attributes of QtWidgets.QparentWidget
@@ -34,47 +32,42 @@ class EditorWindow(QtWidgets.QMainWindow):
         else:
             # Python 3
             super().__init__()
+            
         
-        # Widget to be deleted when it is closed
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        
-        self.parentWidget = _parentWidget
-        self.originalImg = originalImg
-        self.editingImage = Image(Image.BY_DATA, originalImg.data)
-        self.curState = State()
-        
+        # Initialize UI components
         self.ui = Ui_EditorWindow()
         self.ui.setupUi(self)
         
-        self.subWidgets = []
+        # Map labelCanvas pointer to the real instance
+        self.labelCanvas = self.ui.labelCanvas
+        
+        # Widget to be deleted when it is closed
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
         
         # Actions
         self.ui.actionCrop.triggered.connect(self.actionCropClickEvt)
         self.ui.actionRotate.triggered.connect(self.actionRotateClickEvt)
         self.ui.actionSave.triggered.connect(self.actionSaveClickEvt)
         self.ui.actionReset.triggered.connect(self.actionResetClickEvt)
-                
+        
+        # Initialize specific attributes
+        self.parentWidget = _parentWidget
+        self.originalImg = originalImg
+        self.editingImage = Image(Image.BY_DATA, originalImg.data)
+        self.curState = State()
+        
         # Set title
         imageFileName = originalImg.name.split('.')[0]
         self.setWindowTitle(imageFileName)
         
-        CommonFunctions.display(self.editingImage, self.ui.labelCanvas)
+        # Display Editing Image
+        self.display(self.editingImage)
         self.show()
         
     
     ### Destructor
     def __del__(self):
         LOG(self, ' Finalizing ' + self.windowTitle() + ' Window')
-        
-    
-    # Remove a SubWidget
-    def removeSubWidget(self, subWidget):
-        self.subWidgets.remove(subWidget)
-        
-    
-    # Remove the link to Parent Widget
-    def unlinkToParentWidget(self):
-        self.parentWidget = None
         
     
     ### Transformation
@@ -95,7 +88,7 @@ class EditorWindow(QtWidgets.QMainWindow):
             self.editingImage = siso.flip(self.editingImage, siso.FLIP_H)
             
         # Display Rotated Image
-        CommonFunctions.display(self.editingImage, self.ui.labelCanvas)
+        self.display(self.editingImage)
         
     
     # Flip Vetical
@@ -115,7 +108,7 @@ class EditorWindow(QtWidgets.QMainWindow):
             self.editingImage = siso.flip(self.editingImage, siso.FLIP_V)
             
         # Display Rotated Image
-        CommonFunctions.display(self.editingImage, self.ui.labelCanvas)
+        self.display(self.editingImage)
         
     
     def getRotationAngle(self):
@@ -140,7 +133,7 @@ class EditorWindow(QtWidgets.QMainWindow):
         self.editingImage = siso.rotate(self.editingImage, self.curState.rotationAngle)
         
         # Display Rotated Image
-        CommonFunctions.display(self.editingImage, self.ui.labelCanvas)
+        self.display(self.editingImage)
         
     
     ### Event Handlers
@@ -159,29 +152,5 @@ class EditorWindow(QtWidgets.QMainWindow):
     
     def actionResetClickEvt(self):
         print('EditorWindow.actionResetClickEvt')
-        
-    
-    def closeEvent(self, event):
-        LOG(self, 'Closing ' + self.windowTitle() + ' Window')
-        # Terminate sub-attributes/processes
-        for subWidget in self.subWidgets:
-            subWidget.unlinkToParentWidget()
-            subWidget.close()
-            
-        self.subWidgets.clear()
-        
-        # Notify Parent Widget
-        if None != self.parentWidget:
-            self.parentWidget.removeSubWidget(self)
-        
-        # Call QtWidgets.QMainWindow 's procedure
-        if 3 > sys.version_info[0]:
-            # Python 2
-            super(EditorWindow, self).closeEvent(event)
-            
-        else:
-            # Python 3
-            super().closeEvent(event)
-            
         
     
