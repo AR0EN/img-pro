@@ -1,43 +1,84 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Aug 13 20:55:37 2019
 
+@author: Le Huy Hoang
+"""
+
+import sys
+
+from PyQt5 import QtCore
 from PyQt5 import QtWidgets
-from images import Images
+
 from ui_main_window import Ui_MainWindow
+
 from editor_window import EditorWindow
-from wrapper import CommonFunctions
+from wrapper import WindowWrapper
+from images import Images
+from log import LOG
 
-class MainWindow():
-    SUPPORT_FORMAT = '(*.bmp *.gif *.jpg *.jpeg *.png *.pbm *.pgm *.ppm *.xbm *.xpm *.svg)'
-
+class MainWindow(WindowWrapper):
+    ### Constructor
     def __init__(self):
-        self.mainWindow = QtWidgets.QMainWindow()
-        self.gui = Ui_MainWindow()
-        self.gui.setupUi(self.mainWindow)
-        self.subWindows = []
-        self.imgList = Images(self.gui.listWidgetImgList)
+        # Initialize attributes of QtWidgets.QMainWindow
+        if 3 > sys.version_info[0]:
+            # Python 2
+            super(MainWindow, self).__init__()
+            
+        else:
+            # Python 3
+            super().__init__()
+            
+        
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
+        
+        # Map labelCanvas pointer to the real instance
+        self.labelCanvas = self.ui.labelCanvas
+        
+        self.imgList = Images(self.ui.listWidgetImgList)
         
         # Actions
-        self.gui.actionImport.triggered.connect(self.actionImportClickEvt)
-        self.gui.actionEdit.triggered.connect(self.actionEditClickEvt)
-        self.gui.actionExit.triggered.connect(self.actionExitClickEvt)
-        self.gui.listWidgetImgList.currentItemChanged.connect(self.actionCurrentItemChangedEvt)
-        self.mainWindow.show()
+        self.ui.actionImport.triggered.connect(self.actionImportClickEvt)
+        self.ui.actionEdit.triggered.connect(self.actionEditClickEvt)
+        self.ui.actionExit.triggered.connect(self.actionExitClickEvt)
+        self.ui.listWidgetImgList.currentItemChanged.connect(self.actionCurrentItemChangedEvt)
+        self.show()
+        
     
+    ### Destructor
+    def __del__(self):
+        LOG(self, 'Finalizing ' + self.windowTitle() + ' Window')
+        
+    
+    ### Event Handlers
     # Display Current Item when it changed
     def actionCurrentItemChangedEvt(self):
-        currentRow = self.gui.listWidgetImgList.currentRow()
-        CommonFunctions.display(self.imgList.images[currentRow], self.gui.labelCanvas)
+        # Get selected row index
+        currentRow = self.ui.listWidgetImgList.currentRow()
+        
+        # Display selected image
+        self.display(self.imgList.images[currentRow])
+        
         # Enable Edit Action
-        self.gui.actionEdit.setEnabled(True)
-
+        self.ui.actionEdit.setEnabled(True)
+        
+    
     # Import images
     def actionImportClickEvt(self):
         self.imgList.importImages()
+        
     
     # Edit selected image
     def actionEditClickEvt(self):
-        editor = EditorWindow(self.imgList.images[self.gui.listWidgetImgList.currentRow()])
-        self.subWindows.append(editor.editorWindow)
-
+        selectedIndex = self.ui.listWidgetImgList.currentRow()
+        selectedImg = self.imgList.images[selectedIndex]
+        editor = EditorWindow(self, selectedImg)
+        self.subWidgets.append(editor)
+        
+    
     # Exit
     def actionExitClickEvt(self):
-        self.mainWindow.close()
+        self.close()
+        
+    

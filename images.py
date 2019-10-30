@@ -15,25 +15,50 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QFileDialog, QListWidget, QListWidgetItem
 
 class Image:
+    # Initiation Types
+    BY_PATH = 0
+    BY_DATA = 1
+    
     # Supported Image Formats (refer to OpenCV imread() for more details)
     SUPPORT_FORMAT = '(*.bmp *.dib *.jpeg *.jpg *.png *.pbm *.pgm *.ppm *.tiff *.tif)'
     INTERPOLATION_METHOD = cv2.INTER_AREA
     
-    def __init__(self, _fullPath):
-        if '' != _fullPath:
-            self.filePath = _fullPath
-            self.name = os.path.basename(_fullPath)
-            self.data = cv2.imread(_fullPath, cv2.IMREAD_UNCHANGED)
-            self.displayData = Image.convertToRGBU8(self.data)
-            if isinstance(self.data, type(None)):
-                self.valid = False
-                
+    # Create a new Image instance with path to image file
+    def __init__(self, initiationType, arg):
+        if Image.BY_PATH == initiationType:
+            # arg is full path to image file
+            if '' != arg:
+                self.filePath = arg
+                self.name = os.path.basename(arg)
+                self.data = cv2.imread(arg, cv2.IMREAD_UNCHANGED)
+                self.displayData = Image.convertToRGBU8(self.data)
+                if isinstance(self.data, type(None)):
+                    self.valid = False
+                    
+                else:
+                    self.valid = True
+                    
             else:
-                self.valid = True
+                self.valid = False
+            
+        elif Image.BY_DATA == initiationType:
+            # arg is image data
+            self.filePath = None
+            self.name = None
+            self.data = arg
+            self.displayData = Image.convertToRGBU8(self.data)
+            self.valid = True
             
         else:
+            # Unrecognized initiationType
+            print('[Image.__init__()] Unrecognized initiationType: ' + str(initiationType))
+            self.filePath = None
+            self.name = None
+            self.data = None
+            self.displayData = None
             self.valid = False
-    
+            
+        
     # Convert input data int 8-bit RGB data (for display purpose)
     @staticmethod
     def convertToRGBU8(inputData):
@@ -47,6 +72,7 @@ class Image:
         dataRGBU8 = cv2.merge([r,g,b])
         
         return dataRGBU8
+    
 
 class Images():
     # Maximum Size of the queue
@@ -60,7 +86,7 @@ class Images():
     def addImage(self, _path):
         if (Images.MAX_SIZE > len(self.images)):
             # Read the image
-            img = Image(_path)
+            img = Image(Image.BY_PATH, _path)
             
             if (img.valid):
                 # Add image to the queue
