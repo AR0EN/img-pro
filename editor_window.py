@@ -7,14 +7,14 @@ Created on Tue Oct 02 22:01:00 2019
 
 import sys
 import os
+import cv2
+import siso
 
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
 from ui_editor_window import Ui_EditorWindow
 from save_window import SaveWindow
-from wrapper import CommonFunctions
-from cv2 import cv2
 from rotation_dialog import RotationDialog
 
 from wrapper import WindowWrapper
@@ -22,7 +22,6 @@ from state import State
 from images import Image
 from log import LOG
 
-import siso
 
 class EditorWindow(WindowWrapper):
     ### Constructor
@@ -150,8 +149,8 @@ class EditorWindow(WindowWrapper):
         
     
     def actionSaveClickEvt(self):
-        print('EditorWindow.actionSaveClickEvt')
-        
+        save = SaveWindow(self, self.originalImg)
+        self.subWidgets.append(save)
     
     def actionResetClickEvt(self):
         print('EditorWindow.actionResetClickEvt')

@@ -1,26 +1,37 @@
 
-from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 from ui_save_window import Ui_SaveWindow
 from images import Image
 from cv2 import cv2
 import numpy as np
+from wrapper import WindowWrapper
+import sys
 
 
-class SaveWindow():
+class SaveWindow(WindowWrapper):
 
-    def __init__(self, imageInfo):
-        self.imageResized = None
-        self.saveWindow = QtWidgets.QMainWindow()
+    def __init__(self, _parentWidget, imageInfo):
+        # Initialize attributes of QtWidgets.QparentWidget
+        if 3 > sys.version_info[0]:
+            # Python 2
+            super(SaveWindow, self).__init__()
+            
+        else:
+            # Python 3
+            super().__init__()
+
+        self.parentWidget = _parentWidget
         self.imageInfo = imageInfo
-        self.save = Ui_SaveWindow()
-        self.save.setupUi(self.saveWindow)
-        self.save.sbWidth.setValue(self.imageInfo.displayData.shape[1])
-        self.save.sbHeight.setValue(self.imageInfo.displayData.shape[0])
-        self.save.btnSave.clicked.connect(self.onClickSave)
-        self.save.rbWiHe.clicked.connect(self.enableWiHe)
-        self.save.rbPercent.clicked.connect(self.enablePercent)
-        self.saveWindow.show()
+        self.ui = Ui_SaveWindow()
+        self.ui.setupUi(self)
+        self.imageResized = None
+        self.ui.sbWidth.setValue(self.imageInfo.displayData.shape[1])
+        self.ui.sbHeight.setValue(self.imageInfo.displayData.shape[0])
+        # Actions
+        self.ui.btnSave.clicked.connect(self.onClickSave)
+        self.ui.rbWiHe.clicked.connect(self.enableWiHe)
+        self.ui.rbPercent.clicked.connect(self.enablePercent)
+        self.show()
 
     def onClickSave(self):
         imageResized = self.resizeImage()
@@ -30,23 +41,23 @@ class SaveWindow():
         cv2.imwrite(fileName, imageResized)
 
     def enableWiHe(self):
-        self.save.sbPercent.lineEdit().setEnabled(False)
-        self.save.sbWidth.lineEdit().setEnabled(True)
-        self.save.sbHeight.lineEdit().setEnabled(True)
+        self.ui.sbPercent.lineEdit().setEnabled(False)
+        self.ui.sbWidth.lineEdit().setEnabled(True)
+        self.ui.sbHeight.lineEdit().setEnabled(True)
 
     def enablePercent(self):
-        self.save.sbWidth.lineEdit().setEnabled(False)
-        self.save.sbHeight.lineEdit().setEnabled(False)
-        self.save.sbPercent.lineEdit().setEnabled(True)
+        self.ui.sbWidth.lineEdit().setEnabled(False)
+        self.ui.sbHeight.lineEdit().setEnabled(False)
+        self.ui.sbPercent.lineEdit().setEnabled(True)
 
     def resizeImage(self):
-        if self.save.rbPercent.isChecked():
-            scale_percent = self.save.sbPercent.value()
+        if self.ui.rbPercent.isChecked():
+            scale_percent = self.ui.sbPercent.value()
             width = int(self.imageInfo.displayData.shape[1] * scale_percent / 100)
             height = int(self.imageInfo.displayData.shape[0] * scale_percent / 100)
-        elif self.save.rbWiHe.isChecked():
-            width = self.save.sbWidth.value()
-            height = self.save.sbHeight.value()
+        elif self.ui.rbWiHe.isChecked():
+            width = self.ui.sbWidth.value()
+            height = self.ui.sbHeight.value()
         dim = (width, height)
         resized = cv2.resize(self.imageInfo.displayData, dim, interpolation = cv2.INTER_AREA)
         resizedRGB = Image.convertToRGBU8(resized)
