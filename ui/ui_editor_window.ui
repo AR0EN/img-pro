@@ -100,6 +100,7 @@ color: rgb(160, 160, 160);</string>
    <addaction name="actionSave"/>
    <addaction name="actionCrop"/>
    <addaction name="actionRotate"/>
+   <addaction name="actionReset"/>
   </widget>
   <action name="actionSave">
    <property name="icon">
@@ -150,6 +151,21 @@ color: rgb(160, 160, 160);</string>
    </property>
    <property name="shortcut">
     <string>R</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/toolbar/icons/reset.png</normaloff>:/toolbar/icons/reset.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reset</string>
+   </property>
+   <property name="toolTip">
+    <string>Undo all changes</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
    </property>
   </action>
  </widget>
