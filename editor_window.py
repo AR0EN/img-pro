@@ -14,7 +14,7 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
 from ui_editor_window import Ui_EditorWindow
-from save_window import SaveWindow
+from save_dialog import SaveDialog
 from rotation_dialog import RotationDialog
 
 from wrapper import WindowWrapper
@@ -149,7 +149,7 @@ class EditorWindow(WindowWrapper):
         
     
     def actionSaveClickEvt(self):
-        save = SaveWindow(self, self.originalImg)
+        save = SaveDialog(self, self.editingImage)
         self.subWidgets.append(save)
     
     def actionResetClickEvt(self):
